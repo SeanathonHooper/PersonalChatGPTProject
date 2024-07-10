@@ -10,6 +10,7 @@ namespace ChatGptImageTranscriber
     public partial class MainWindow : Window
     {
         private StringBuilder messageHistory;
+        private bool readMessages = true;
 
         public MainWindow()
         {
@@ -21,10 +22,15 @@ namespace ChatGptImageTranscriber
 
         private async void submitToOpenAI_Click(object sender, RoutedEventArgs e)
         {
+            AzureSpeech.StopReadingMessage();
             string response = await GetGPTResponse();
             messageHistory.Append($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} ChatGPT: {response}\n");
             openAIText.Text = response;
-            await AzureSpeech.ReadChatGPTMessage(response);
+            
+            if(readMessages == true)
+            {
+                await AzureSpeech.ReadChatGPTMessage(response);
+            }
         }
         private async Task<string> GetGPTResponse()
         {
@@ -35,12 +41,30 @@ namespace ChatGptImageTranscriber
 
         private async void startVoiceRecording_Click(object sender, RoutedEventArgs e)
         {
+            AzureSpeech.StopReadingMessage();
             userText.Text = await AzureSpeech.StartSpeechRecognition();
         }
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
             System.IO.File.WriteAllTextAsync("MessageHistory.txt", messageHistory.ToString());
             messageHistory.Clear();
+        }
+
+        private void userText_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (AzureSpeech.isReading == true)
+            {
+                AzureSpeech.StopReadingMessage();
+            }
+        }
+
+        private void enableVoiceButton_Click(object sender, RoutedEventArgs e)
+        {
+            readMessages = !readMessages;
+            if (AzureSpeech.isReading)
+            {
+                AzureSpeech.StopReadingMessage();
+            }
         }
     }
 }

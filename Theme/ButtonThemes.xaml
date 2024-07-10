@@ -57,4 +57,23 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    <Style TargetType="{x:Type Button}"
+    x:Key="ToggleVoiceButton">
+        <Setter Property="Background" Value="#353340"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="0"
+            Width="80" Height="60" CornerRadius="20">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="Toggle Voice"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#454350"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

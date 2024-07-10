@@ -54,7 +54,7 @@
                          Background="Transparent"
                          VerticalContentAlignment="Center"
                          Padding="5"
-                         Foreground="#CFCFCF"
+                         Foreground="AntiqueWhite"
                          FontSize="20"
                          x:Name="userText"/>
                 </Grid>

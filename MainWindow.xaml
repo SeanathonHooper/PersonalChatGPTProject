@@ -1,0 +1,78 @@
+﻿<Window x:Class="ChatGptImageTranscriber.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChatGptImageTranscriber"
+        mc:Ignorable="d"
+        Height="920" Width="600"
+        WindowStyle="SingleBorderWindow"
+        Background="#272537"
+        ResizeMode="NoResize">
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="736"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <TextBlock Text="ChatGPT"
+                   Foreground="AntiqueWhite"
+                   FontSize="48"
+                   HorizontalAlignment="Center"
+                   Margin="20,0,0,0"/>
+            <Button
+                x:Name="saveButton"
+                Click="saveButton_Click"
+                Margin="20,0,0,0"
+                Foreground="AntiqueWhite"
+                FontSize="20"
+                Style="{StaticResource SaveButton}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="0" VerticalAlignment="Top" Height="644" Width="500" Background="#171527" Margin="50,69,50,0">
+            <TextBlock x:Name="openAIText"
+                   FontSize="26"
+                   Foreground="AntiqueWhite"
+                   HorizontalAlignment="Center"
+                   MaxHeight="500"
+                   Margin="20,20,20,20"
+                   TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1"
+                Orientation="Horizontal"
+                HorizontalAlignment="Center">
+            <Border CornerRadius="10"
+                Background="#353340"
+                Width="320" Height="60">
+                <Grid>
+                    <Rectangle StrokeThickness="1"/>
+                    <TextBox Margin="1"
+                         BorderThickness="0"
+                         Background="Transparent"
+                         VerticalContentAlignment="Center"
+                         Padding="5"
+                         Foreground="#CFCFCF"
+                         FontSize="20"
+                         x:Name="userText"/>
+                </Grid>
+            </Border>
+            <Button 
+                Click="submitToOpenAI_Click"
+                Margin="10,0,0,0"
+                Foreground="AntiqueWhite"
+                FontSize="20"
+                Content="Submit"
+                Style="{StaticResource SubmitButton}"/>
+
+            <Button
+                Click="startVoiceRecording_Click"
+                Margin="10,0,0,0"
+                Foreground="AntiqueWhite"
+                FontSize="20"
+                Style="{StaticResource VoiceButton}"/>
+        </StackPanel>
+    </Grid>
+</Window>

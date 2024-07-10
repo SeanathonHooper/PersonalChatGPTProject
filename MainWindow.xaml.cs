@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using System.Windows;
 using SeanOpenAI;
 
@@ -59,12 +60,13 @@ namespace ChatGptImageTranscriber
         }
 
         private void enableVoiceButton_Click(object sender, RoutedEventArgs e)
-        {
+        {         
             readMessages = !readMessages;
             if (AzureSpeech.isReading)
             {
                 AzureSpeech.StopReadingMessage();
             }
+            enableVoiceButton.IsChecked = readMessages;
         }
     }
 }

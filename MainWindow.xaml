@@ -30,13 +30,13 @@
                 Foreground="AntiqueWhite"
                 FontSize="20"
                 Style="{StaticResource SaveButton}"/>
-            <Button
+            <RadioButton
                 x:Name="enableVoiceButton"
                 Click="enableVoiceButton_Click"
                 Margin="20,0,0,0"
                 Foreground="AntiqueWhite"
                 FontSize="13"
-                Style="{StaticResource ToggleVoiceButton}"/>
+                Style="{StaticResource ToggleVoiceButton}" IsChecked="True"/>
             
         </StackPanel>
         <StackPanel Grid.Row="0" VerticalAlignment="Top" Height="644" Width="500" Background="#171527" Margin="50,69,50,0">

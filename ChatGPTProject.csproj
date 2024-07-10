@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SeanOpenAI\SeanOpenAI.csproj" />
+    <ProjectReference Include="..\SeanOpenAI\SeanLibraries.csproj" />
   </ItemGroup>
 
 </Project>

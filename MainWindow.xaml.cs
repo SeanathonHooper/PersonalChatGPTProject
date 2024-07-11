@@ -1,8 +1,7 @@
-﻿using System.Diagnostics;
-using System.Printing;
-using System.Text;
+﻿using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using SeanLibraries;
 using SeanOpenAI;
 
 namespace ChatGptImageTranscriber
@@ -19,7 +18,7 @@ namespace ChatGptImageTranscriber
         {
             messageHistory = new StringBuilder();
             InitializeComponent();           
-            ChatGPTClient.Initialize();        
+            ChatGPTChatClient.Initialize();        
             AzureSpeech.Initialize();
         }
 
@@ -32,7 +31,7 @@ namespace ChatGptImageTranscriber
         {
             StartRecording();
         }
-        private void saveButton_Click(object sender, RoutedEventArgs e)
+        private async void saveButton_Click(object sender, RoutedEventArgs e)
         {
             SaveToFile();
         }
@@ -58,6 +57,12 @@ namespace ChatGptImageTranscriber
             }
         }
 
+        private void uploadScreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            ScreenCapture.TakeScreenshot();
+            openAIText.Text = ChatGPTImageClient.UploadScreenshot();
+        }
+
         private async void SubmitToOpenAI()
         {
             AzureSpeech.StopReadingMessage();
@@ -65,9 +70,9 @@ namespace ChatGptImageTranscriber
             messageHistory.Append($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} ChatGPT: {response}\n");
             openAIText.Text = response;
 
-            if (readMessages == true)
+            if (readMessages)
             {
-                await AzureSpeech.ReadChatGPTMessage(response);
+                await AzureSpeech.ReadMessagee(response);
             }
         }
 
@@ -86,7 +91,7 @@ namespace ChatGptImageTranscriber
         private async Task<string> GetGPTResponse()
         {
             messageHistory.Append($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} User: {userText.Text}\n");
-            string response = await ChatGPTClient.SendChatMessage(userText.Text);
+            string response = await ChatGPTChatClient.SendChatMessage(userText.Text);
             return response;
         }
 
@@ -99,5 +104,14 @@ namespace ChatGptImageTranscriber
             }
             enableVoiceButton.IsChecked = readMessages;
         }
+
+        private async void openAIText_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (readMessages && openAIText.Text != null)
+            {
+                await AzureSpeech.ReadMessagee(openAIText.Text);
+            }
+        }
+
     }
 }

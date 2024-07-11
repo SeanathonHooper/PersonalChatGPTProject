@@ -22,7 +22,7 @@
                    Foreground="AntiqueWhite"
                    FontSize="48"
                    HorizontalAlignment="Center"
-                   Margin="20,0,0,0"/>
+                   Margin="0,0,0,0"/>
             <Button
                 x:Name="saveButton"
                 Click="saveButton_Click"
@@ -30,6 +30,13 @@
                 Foreground="AntiqueWhite"
                 FontSize="20"
                 Style="{StaticResource SaveButton}"/>
+            <Button
+                x:Name="uploadScreenButton"
+                Click="uploadScreenButton_Click"
+                Margin="20,0,0,0"
+                Foreground="AntiqueWhite"
+                FontSize="12"
+                Style="{StaticResource ScreenButton}"/>
             <RadioButton
                 x:Name="enableVoiceButton"
                 Click="enableVoiceButton_Click"
@@ -41,12 +48,13 @@
         </StackPanel>
         <StackPanel Grid.Row="0" VerticalAlignment="Top" Height="644" Width="500" Background="#171527" Margin="50,69,50,0">
             <TextBlock x:Name="openAIText"
-                   FontSize="26"
+                   FontSize="24"
                    Foreground="AntiqueWhite"
                    HorizontalAlignment="Center"
                    MaxHeight="500"
                    Margin="20,20,20,20"
-                   TextWrapping="Wrap"/>
+                   TextWrapping="Wrap"
+                   MouseDown="openAIText_MouseDown"/>
         </StackPanel>
 
         <StackPanel Grid.Row="1"

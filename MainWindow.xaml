@@ -65,6 +65,7 @@
                          Foreground="AntiqueWhite"
                          FontSize="20"
                          TextChanged="userText_TextChanged"
+                         KeyDown="userText_KeyDown"
                          x:Name="userText"/>
                 </Grid>
             </Border>

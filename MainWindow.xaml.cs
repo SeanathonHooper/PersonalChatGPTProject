@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using System.Printing;
 using System.Text;
 using System.Windows;
+using System.Windows.Input;
 using SeanOpenAI;
 
 namespace ChatGptImageTranscriber
@@ -21,34 +23,18 @@ namespace ChatGptImageTranscriber
             AzureSpeech.Initialize();
         }
 
-        private async void submitToOpenAI_Click(object sender, RoutedEventArgs e)
+        private void submitToOpenAI_Click(object sender, RoutedEventArgs e)
         {
-            AzureSpeech.StopReadingMessage();
-            string response = await GetGPTResponse();
-            messageHistory.Append($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} ChatGPT: {response}\n");
-            openAIText.Text = response;
-            
-            if(readMessages == true)
-            {
-                await AzureSpeech.ReadChatGPTMessage(response);
-            }
-        }
-        private async Task<string> GetGPTResponse()
-        {
-            messageHistory.Append($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} User: {userText.Text}\n");
-            string response = await ChatGPTClient.SendChatMessage(userText.Text);
-            return response;
+            SubmitToOpenAI();
         }
 
-        private async void startVoiceRecording_Click(object sender, RoutedEventArgs e)
+        private void startVoiceRecording_Click(object sender, RoutedEventArgs e)
         {
-            AzureSpeech.StopReadingMessage();
-            userText.Text = await AzureSpeech.StartSpeechRecognition();
+            StartRecording();
         }
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
-            System.IO.File.WriteAllTextAsync("MessageHistory.txt", messageHistory.ToString());
-            messageHistory.Clear();
+            SaveToFile();
         }
 
         private void userText_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -60,7 +46,52 @@ namespace ChatGptImageTranscriber
         }
 
         private void enableVoiceButton_Click(object sender, RoutedEventArgs e)
-        {         
+        {
+            ReadMessageToggle();
+        }
+
+        private void userText_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                SubmitToOpenAI();
+            }
+        }
+
+        private async void SubmitToOpenAI()
+        {
+            AzureSpeech.StopReadingMessage();
+            string response = await GetGPTResponse();
+            messageHistory.Append($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} ChatGPT: {response}\n");
+            openAIText.Text = response;
+
+            if (readMessages == true)
+            {
+                await AzureSpeech.ReadChatGPTMessage(response);
+            }
+        }
+
+        private void SaveToFile()
+        {
+            System.IO.File.WriteAllTextAsync("MessageHistory.txt", messageHistory.ToString());
+            messageHistory.Clear();
+        }
+
+        private async void StartRecording()
+        {
+            AzureSpeech.StopReadingMessage();
+            userText.Text = await AzureSpeech.StartSpeechRecognition();
+        }
+
+        private async Task<string> GetGPTResponse()
+        {
+            messageHistory.Append($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} User: {userText.Text}\n");
+            string response = await ChatGPTClient.SendChatMessage(userText.Text);
+            return response;
+        }
+
+        private void ReadMessageToggle()
+        {
             readMessages = !readMessages;
             if (AzureSpeech.isReading)
             {

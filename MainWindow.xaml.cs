@@ -59,8 +59,7 @@ namespace ChatGptImageTranscriber
 
         private void uploadScreenButton_Click(object sender, RoutedEventArgs e)
         {
-            ScreenCapture.TakeScreenshot();
-            openAIText.Text = ChatGPTImageClient.UploadScreenshot();
+            UploadScreenshot();
         }
 
         private async void SubmitToOpenAI()
@@ -111,6 +110,12 @@ namespace ChatGptImageTranscriber
             {
                 await AzureSpeech.ReadMessagee(openAIText.Text);
             }
+        }
+
+        private async void UploadScreenshot()
+        {
+            ScreenCapture.TakeScreenshot();
+            openAIText.Text = await ChatGPTImageClient.UploadScreenshot();
         }
 
     }

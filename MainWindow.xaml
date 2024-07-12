@@ -30,13 +30,6 @@
                 Foreground="AntiqueWhite"
                 FontSize="20"
                 Style="{StaticResource SaveButton}"/>
-            <Button
-                x:Name="uploadScreenButton"
-                Click="uploadScreenButton_Click"
-                Margin="20,0,0,0"
-                Foreground="AntiqueWhite"
-                FontSize="12"
-                Style="{StaticResource ScreenButton}"/>
             <RadioButton
                 x:Name="enableVoiceButton"
                 Click="enableVoiceButton_Click"
@@ -46,7 +39,7 @@
                 Style="{StaticResource ToggleVoiceButton}" IsChecked="True"/>
             
         </StackPanel>
-        <StackPanel Grid.Row="0" VerticalAlignment="Top" Height="644" Width="500" Background="#171527" Margin="50,69,50,0">
+        <StackPanel Grid.Row="0" VerticalAlignment="Top" Height="644" Width="500" Background="#171527" Margin="50,79,50,0">
             <TextBlock x:Name="openAIText"
                    FontSize="24"
                    Foreground="AntiqueWhite"
@@ -62,7 +55,7 @@
                 HorizontalAlignment="Center">
             <Border CornerRadius="10"
                 Background="#353340"
-                Width="320" Height="60">
+                Width="300" Height="60">
                 <Grid>
                     <Rectangle StrokeThickness="1"/>
                     <TextBox Margin="1"
@@ -72,7 +65,6 @@
                          Padding="5"
                          Foreground="AntiqueWhite"
                          FontSize="20"
-                         TextChanged="userText_TextChanged"
                          KeyDown="userText_KeyDown"
                          x:Name="userText"/>
                 </Grid>
@@ -90,7 +82,15 @@
                 Margin="10,0,0,0"
                 Foreground="AntiqueWhite"
                 FontSize="20"
-                Style="{StaticResource VoiceButton}"/>
+                Style="{StaticResource VoiceButton}"
+                />
+            <Button
+                x:Name="uploadScreenButton"
+                Click="uploadScreenButton_Click"
+                Margin="10,0,0,0"
+                Foreground="AntiqueWhite"
+                FontSize="12"
+                Style="{StaticResource ScreenButton}"/>
         </StackPanel>
     </Grid>
 </Window>

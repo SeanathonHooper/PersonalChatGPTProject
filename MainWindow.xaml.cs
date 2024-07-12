@@ -27,22 +27,17 @@ namespace ChatGptImageTranscriber
             SubmitToOpenAI();
         }
 
-        private void startVoiceRecording_Click(object sender, RoutedEventArgs e)
+        private async void startVoiceRecording_Click(object sender, RoutedEventArgs e)
         {
-            StartRecording();
+            userText.Text = await RecordVoice();
+
+            SubmitToOpenAI();
         }
         private async void saveButton_Click(object sender, RoutedEventArgs e)
         {
             SaveToFile();
         }
 
-        private void userText_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-            if (AzureSpeech.isReading == true)
-            {
-                AzureSpeech.StopReadingMessage();
-            }
-        }
 
         private void enableVoiceButton_Click(object sender, RoutedEventArgs e)
         {
@@ -65,13 +60,14 @@ namespace ChatGptImageTranscriber
         private async void SubmitToOpenAI()
         {
             AzureSpeech.StopReadingMessage();
+
             string response = await GetGPTResponse();
             messageHistory.Append($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} ChatGPT: {response}\n");
             openAIText.Text = response;
 
             if (readMessages)
             {
-                await AzureSpeech.ReadMessagee(response);
+                await AzureSpeech.ReadMessage(response);
             }
         }
 
@@ -81,16 +77,18 @@ namespace ChatGptImageTranscriber
             messageHistory.Clear();
         }
 
-        private async void StartRecording()
+        private async Task<string> RecordVoice()
         {
             AzureSpeech.StopReadingMessage();
-            userText.Text = await AzureSpeech.StartSpeechRecognition();
+            string recognizedSpeech = await AzureSpeech.StartSpeechRecognition();
+
+            return recognizedSpeech;
         }
 
         private async Task<string> GetGPTResponse()
         {
             messageHistory.Append($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} User: {userText.Text}\n");
-            string response = await ChatGPTChatClient.SendChatMessage(userText.Text);
+            string response = await ChatGPTImageClient.GetResponse(userText.Text);
             return response;
         }
 
@@ -108,14 +106,18 @@ namespace ChatGptImageTranscriber
         {
             if (readMessages && openAIText.Text != null)
             {
-                await AzureSpeech.ReadMessagee(openAIText.Text);
+                await AzureSpeech.ReadMessage(openAIText.Text);
             }
         }
 
         private async void UploadScreenshot()
-        {
-            ScreenCapture.TakeScreenshot();
-            openAIText.Text = await ChatGPTImageClient.UploadScreenshot();
+        {  
+            openAIText.Text = await ChatGPTImageClient.UploadScreenshot(ScreenCapture.TakeScreenshot());
+
+            if (readMessages)
+            {
+                await AzureSpeech.ReadMessage(openAIText.Text);
+            }
         }
 
     }

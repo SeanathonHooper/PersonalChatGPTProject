@@ -111,8 +111,12 @@ namespace ChatGptImageTranscriber
         }
 
         private async void UploadScreenshot()
-        {  
-            openAIText.Text = await ChatGPTImageClient.UploadScreenshot(ScreenCapture.TakeScreenshot());
+        {
+            string imageGUID = ScreenCapture.TakeScreenshot();
+            string chatGptResponse = await ChatGPTImageClient.UploadScreenshot(imageGUID);
+            openAIText.Text = chatGptResponse;
+            messageHistory.Append($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} User: Uploaded Screenshot {imageGUID} \n");
+            messageHistory.Append($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} OpenAI: {chatGptResponse}\n");
 
             if (readMessages)
             {

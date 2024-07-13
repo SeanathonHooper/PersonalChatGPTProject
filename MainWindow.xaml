@@ -8,6 +8,7 @@
         Height="920" Width="600"
         WindowStyle="SingleBorderWindow"
         Background="#272537"
+        Title="ChatGPT"
         ResizeMode="NoResize">
 
 
@@ -16,6 +17,7 @@
             <RowDefinition Height="736"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+        
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
             <TextBlock Text="ChatGPT"
@@ -26,14 +28,14 @@
             <Button
                 x:Name="saveButton"
                 Click="saveButton_Click"
-                Margin="20,0,0,0"
+                Margin="20,5,0,0"
                 Foreground="AntiqueWhite"
                 FontSize="20"
                 Style="{StaticResource SaveButton}"/>
             <RadioButton
                 x:Name="enableVoiceButton"
                 Click="enableVoiceButton_Click"
-                Margin="20,0,0,0"
+                Margin="20,5,0,0"
                 Foreground="AntiqueWhite"
                 FontSize="13"
                 Style="{StaticResource ToggleVoiceButton}" IsChecked="True"/>

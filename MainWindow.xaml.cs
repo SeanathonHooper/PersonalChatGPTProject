@@ -17,8 +17,7 @@ namespace ChatGptImageTranscriber
         public MainWindow()
         {
             messageHistory = new StringBuilder();
-            InitializeComponent();           
-            ChatGPTChatClient.Initialize();        
+            InitializeComponent();                
             AzureSpeech.Initialize();
         }
 
@@ -123,6 +122,5 @@ namespace ChatGptImageTranscriber
                 await AzureSpeech.ReadMessage(openAIText.Text);
             }
         }
-
     }
 }

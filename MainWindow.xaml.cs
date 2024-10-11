@@ -163,7 +163,6 @@ namespace ChatGptImageTranscriber
                 }
 
                 ChatGPTClient.Initialize(chatGPTKey, aiModel, assistantInstructions);
-                ScreenCapture.Initialize((int)System.Windows.SystemParameters.PrimaryScreenWidth, (int)System.Windows.SystemParameters.FullPrimaryScreenHeight);
             }
         }
         private string parseStringFromJson(JObject o, string parseKey, string blankItem, string missingKey, string nullItemErrorTitle = "Missing Item", string blankItemErrorTitle = "Blank Item")

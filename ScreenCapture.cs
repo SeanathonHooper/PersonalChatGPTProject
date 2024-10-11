@@ -8,15 +8,9 @@ namespace SeanLibraries
     public static class ScreenCapture
     {
         private static int imageIndex = 0;
-        private static Bitmap screenCapture;
+        private static Bitmap screenCapture = new Bitmap((int)System.Windows.SystemParameters.PrimaryScreenWidth, (int)System.Windows.SystemParameters.FullPrimaryScreenHeight);
         private static string fileName = "";
 
-        public static void Initialize(int screenWidth, int screenHeigh)
-        {
-            screenCapture = new Bitmap(screenWidth, screenHeigh);
-        }
-
-        
         public static string TakeScreenshot()
         {
             using (var g = Graphics.FromImage(screenCapture))

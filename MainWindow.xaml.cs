@@ -9,6 +9,7 @@ using SeanOpenAI;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.CodeDom;
+using System.Runtime.CompilerServices;
 
 namespace ChatGptImageTranscriber
 {
@@ -101,7 +102,7 @@ namespace ChatGptImageTranscriber
         private async Task<string> GetGPTResponse()
         {
             messageHistory.Append($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} User: {userText.Text}\n");
-            string response = await ChatGPTImageClient.GetResponse(userText.Text);
+            string response = await ChatGPTClient.GetResponse(userText.Text);
             return response;
         }
         private void ReadMessageToggle()
@@ -125,7 +126,7 @@ namespace ChatGptImageTranscriber
             
             string fileName = ScreenCapture.TakeScreenshot();
 
-            string chatGptResponse = await ChatGPTImageClient.UploadScreenshot(fileName);
+            string chatGptResponse = await ChatGPTClient.UploadScreenshot(fileName);
             openAIText.Text = chatGptResponse;
 
             messageHistory.Append($"{DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} User: Uploaded Screenshot {fileName} \n");
@@ -141,79 +142,51 @@ namespace ChatGptImageTranscriber
             using (StreamReader r = new StreamReader("config.json"))
             {
                 JObject o = JObject.Parse(r.ReadToEnd());
-                string chatGPTKey = "";
+                string chatGPTKey = parseStringFromJson(o, "ChatGPTKey", "ChatGPT API Key Is Blank, Add It To \"config.json\"", "Unable to Find ChatGPT API Key in \"config.json\"");
+
+                string aiModel = parseStringFromJson(o, "AiModel", "ChatGPT AI Model Is Blank, Add It To \"config.json File\"", "Unable to Find \"aiModel\" in \"config.json\"");
+                string assistantInstructions = parseStringFromJson(o, "AssistantInstructions", "ChatGPT Assistant Instructions Is Blank, Add It To \"api.json\" File", "Unable to Find \"assistantInstructions\" in \"config.json\"");
+
                 string speechKey = "";
                 string speechRegion = "";
-
-                if (o["ChatGPTKey"] != null)
-                {
-                    if (o["ChatGPTKey"].ToString() == "")
-                    {
-                        missingAPIKeyError("ChatGPT API Key Is Blank, Add It To The api.json File");
-                    }
-                    else
-                    {
-                        chatGPTKey = o["ChatGPTKey"].ToString();
-                    }
-                }
-                else
-                {
-                    missingAPIKeyError("Unable to Find ChatGPT API Key");
-                }
-
-
 
                 if (o["useVoice"] != null)
                 {
                     useVoice = o["useVoice"].Value<bool>();
                     if (useVoice == false)
                     {
-                        MessageBox.Show("Voice service capablility is turned off, reenable it in api.json", "Voice Capability Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show("Voice Services Capablility Is Disabled, Re-enable It In \"config.json\"", "Voice Capability Info", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {
-                        if (o["AzureSpeechKey"] != null)
-                        {
-                            if (o["AzureSpeechKey"].ToString() == "")
-                            {
-                                missingAPIKeyError("Azure Speech API Key Is Blank, Add It To The api.json File");
-                            }
-                            else
-                            {
-                                speechKey = o["AzureSpeechKey"].ToString();
-                            }
-                        }
-                        else
-                        {
-                            missingAPIKeyError("Unable to Find Azure Speech API Key");
-                        }
-
-
-                        if (o["AzureSpeechRegion"] != null)
-                        {
-                            if (o["AzureSpeechRegion"].ToString() == "")
-                            {
-                                missingAPIKeyError("Azure Speech Region Is Blank, Add It To The api.json File");
-                            }
-                            else
-                            {
-                                speechRegion = o["AzureSpeechRegion"].ToString();
-                            }
-                        }
-                        else
-                        {
-                            missingAPIKeyError("Unable to Find Azure Region API Key");
-                        }
-
+                        speechKey = parseStringFromJson(o, "AzureSpeechKey", "Azure Speech API Key Is Blank, Add It To The \"config.json\" File", "Unable to Find Azure Speech API Key");
+                        speechRegion = parseStringFromJson(o, "AzureSpeechRegion", "Azure Speech Region Is Blank, Add It To The \"config.json\" File", "Unable to Find Azure Region API Key");
                         AzureSpeech.Initialize(speechKey, speechRegion);
                     }
                 }
 
-
-
-                ChatGPTImageClient.Initialize(chatGPTKey);
+                ChatGPTClient.Initialize(chatGPTKey, aiModel, assistantInstructions);
                 ScreenCapture.Initialize((int)System.Windows.SystemParameters.PrimaryScreenWidth, (int)System.Windows.SystemParameters.FullPrimaryScreenHeight);
             }
+        }
+        private string parseStringFromJson(JObject o, string parseKey, string blankItem, string missingKey)
+        {
+            if (o[parseKey] != null)
+            {
+                if (o[parseKey].ToString() == "")
+                {
+                    missingAPIKeyError(blankItem);
+                }
+                else
+                {
+                    return o[parseKey].ToString();
+                }
+            }
+            else
+            {
+                missingAPIKeyError(missingKey);
+            }
+            return null;
         }
     }
 }

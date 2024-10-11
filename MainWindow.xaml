@@ -17,7 +17,7 @@
             <RowDefinition Height="736"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        
+
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
             <TextBlock Text="ChatGPT"
@@ -39,17 +39,17 @@
                 Foreground="AntiqueWhite"
                 FontSize="13"
                 Style="{StaticResource ToggleVoiceButton}" IsChecked="True"/>
-            
+
         </StackPanel>
-        <StackPanel Grid.Row="0" VerticalAlignment="Top" Height="644" Width="500" Background="#171527" Margin="50,79,50,0">
+        <StackPanel Grid.Row="0" VerticalAlignment="Top" Height="635" Width="500" Background="#171527" Margin="50,79,50,0">
             <TextBlock x:Name="openAIText"
-                   FontSize="24"
+                   FontSize="20"
                    Foreground="AntiqueWhite"
                    HorizontalAlignment="Center"
-                   MaxHeight="500"
                    Margin="20,20,20,20"
                    TextWrapping="Wrap"
                    MouseDown="openAIText_MouseDown"/>
+
         </StackPanel>
 
         <StackPanel Grid.Row="1"

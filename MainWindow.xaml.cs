@@ -25,9 +25,9 @@ namespace ChatGptImageTranscriber
             InitializeComponent();
             InitializeServices();       
         }
-        private void missingAPIKeyError(string errorText)
+        private void criticalErrorBox(string errorText, string errorTitle)
         {
-            MessageBoxResult result = MessageBox.Show(errorText, "API Key not found", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+            MessageBoxResult result = MessageBox.Show(errorText, errorTitle, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
             if (result == MessageBoxResult.OK)
             {
                 Application.Current.Shutdown();
@@ -166,13 +166,13 @@ namespace ChatGptImageTranscriber
                 ScreenCapture.Initialize((int)System.Windows.SystemParameters.PrimaryScreenWidth, (int)System.Windows.SystemParameters.FullPrimaryScreenHeight);
             }
         }
-        private string parseStringFromJson(JObject o, string parseKey, string blankItem, string missingKey)
+        private string parseStringFromJson(JObject o, string parseKey, string blankItem, string missingKey, string nullItemErrorTitle = "Missing Item", string blankItemErrorTitle = "Blank Item")
         {
             if (o[parseKey] != null)
             {
                 if (o[parseKey].ToString() == "")
                 {
-                    missingAPIKeyError(blankItem);
+                    criticalErrorBox(blankItem, blankItemErrorTitle);
                 }
                 else
                 {
@@ -181,7 +181,7 @@ namespace ChatGptImageTranscriber
             }
             else
             {
-                missingAPIKeyError(missingKey);
+                criticalErrorBox(missingKey, nullItemErrorTitle);
             }
             return null;
         }

@@ -3,13 +3,10 @@ using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using SeanLibraries;
 using SeanOpenAI;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.CodeDom;
-using System.Runtime.CompilerServices;
+
 
 namespace ChatGptImageTranscriber
 {
@@ -187,6 +184,22 @@ namespace ChatGptImageTranscriber
                 missingAPIKeyError(missingKey);
             }
             return null;
+        }
+
+        private async void responseButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChatGPTClient.UpdateResponseInstructions(userText.Text);
+            openAIText.Text = $"Update response instructions to \"{userText.Text}\"";
+            if (readMessages && useVoice)
+            {
+                await AzureSpeech.ReadMessage(openAIText.Text);
+            }
+
+            string configJson = File.ReadAllText("config.json");
+            JObject jsonObject = JObject.Parse(configJson);
+            jsonObject["AssistantInstructions"] = userText.Text;
+            File.WriteAllText("config.json", jsonObject.ToString());
+            
         }
     }
 }

@@ -32,6 +32,13 @@
                 Foreground="AntiqueWhite"
                 FontSize="20"
                 Style="{StaticResource SaveButton}"/>
+            <Button
+                 x:Name="responseButton"
+                 Click="responseButton_Click"
+                 Margin="20,5,0,0"
+                 Foreground="AntiqueWhite"
+                 FontSize="10"
+                 Style="{StaticResource ResponseUpdateButton}"/>
             <RadioButton
                 x:Name="enableVoiceButton"
                 Click="enableVoiceButton_Click"

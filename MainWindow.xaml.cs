@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
@@ -23,7 +22,7 @@ namespace ChatGptImageTranscriber
         {
             messageHistory = new StringBuilder();
             InitializeComponent();
-            InitializeServices();       
+            InitializeServices();      
         }
         private void criticalErrorBox(string errorText, string errorTitle)
         {
@@ -64,6 +63,29 @@ namespace ChatGptImageTranscriber
         {
             UploadScreenshot();
         }
+        private async void responseButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChatGPTClient.UpdateResponseInstructions(userText.Text);
+            openAIText.Text = $"Update response instructions to \"{userText.Text}\"";
+            if (readMessages && useVoice)
+            {
+                await AzureSpeech.ReadMessage(openAIText.Text);
+            }
+
+            string configJson = File.ReadAllText("config.json");
+            JObject jsonObject = JObject.Parse(configJson);
+            jsonObject["AssistantInstructions"] = userText.Text;
+            File.WriteAllText("config.json", jsonObject.ToString());
+
+        }
+        private async void openAIText_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (readMessages && openAIText.Text != null && useVoice)
+            {
+                await AzureSpeech.ReadMessage(openAIText.Text);
+            }
+        }
+
         private async void SubmitToOpenAI()
         {
             if (useVoice)
@@ -111,13 +133,7 @@ namespace ChatGptImageTranscriber
             }
             enableVoiceButton.IsChecked = readMessages;
         }
-        private async void openAIText_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (readMessages && openAIText.Text != null && useVoice)
-            {
-                await AzureSpeech.ReadMessage(openAIText.Text);
-            }
-        }
+
         private async void UploadScreenshot()
         {
             
@@ -143,6 +159,7 @@ namespace ChatGptImageTranscriber
 
                 string aiModel = parseStringFromJson(o, "AiModel", "ChatGPT AI Model Is Blank, Add It To \"config.json File\"", "Unable to Find \"aiModel\" in \"config.json\"");
                 string assistantInstructions = parseStringFromJson(o, "AssistantInstructions", "ChatGPT Assistant Instructions Is Blank, Add It To \"api.json\" File", "Unable to Find \"assistantInstructions\" in \"config.json\"");
+                openAIText.Text = "CurrentInstructions: " + parseStringFromJson(o, "AssistantInstructions", "ChatGPT Assistant Instructions is Blank, Add It to \"api.json\" File", "Unable to find \"assitantInstructions\" in \"config.json\"");
 
                 string speechKey = "";
                 string speechRegion = "";
@@ -185,20 +202,5 @@ namespace ChatGptImageTranscriber
             return null;
         }
 
-        private async void responseButton_Click(object sender, RoutedEventArgs e)
-        {
-            ChatGPTClient.UpdateResponseInstructions(userText.Text);
-            openAIText.Text = $"Update response instructions to \"{userText.Text}\"";
-            if (readMessages && useVoice)
-            {
-                await AzureSpeech.ReadMessage(openAIText.Text);
-            }
-
-            string configJson = File.ReadAllText("config.json");
-            JObject jsonObject = JObject.Parse(configJson);
-            jsonObject["AssistantInstructions"] = userText.Text;
-            File.WriteAllText("config.json", jsonObject.ToString());
-            
-        }
     }
 }

@@ -44,13 +44,9 @@ namespace ChatGptImageTranscriber
                 SubmitToOpenAI();
             }
         }
-        private async void saveButton_Click(object sender, RoutedEventArgs e)
+        private void saveButton_Click(object sender, RoutedEventArgs e)
         {
             SaveToFile();
-        }
-        private void enableVoiceButton_Click(object sender, RoutedEventArgs e)
-        {
-            ReadMessageToggle();
         }
         private void userText_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
@@ -124,15 +120,6 @@ namespace ChatGptImageTranscriber
             string response = await ChatGPTClient.GetResponse(userText.Text);
             return response;
         }
-        private void ReadMessageToggle()
-        {
-            readMessages = !readMessages;
-            if (AzureSpeech.isReading)
-            {
-                AzureSpeech.StopReadingMessage();
-            }
-            enableVoiceButton.IsChecked = readMessages;
-        }
 
         private async void UploadScreenshot()
         {
@@ -152,6 +139,21 @@ namespace ChatGptImageTranscriber
         }
         private void InitializeServices()
         {
+            if (!File.Exists("config.json")){
+                JObject defaultConfigSettings = new JObject(
+                    new JProperty("ChatGPTKey", ""),
+                    new JProperty("AssistantInstructions", "Respond to any message I send with 30 words or less."),
+                    new JProperty("AiModel", "gpt-4o"),
+                    new JProperty("useVoice", false),
+                    new JProperty("AzureSpeechKey", ""),
+                    new JProperty("AzureSpeechRegion", ""),
+                    new JProperty("WindowWidth", 600),
+                    new JProperty("WindowHeight", 900)
+                    );
+                File.WriteAllText("config.json", defaultConfigSettings.ToString());
+                criticalErrorBox("\"config.json\" created, add any missing API keys or settings to the file to continue.", "Missing config file created.");
+            }
+
             using (StreamReader r = new StreamReader("config.json"))
             {
                 JObject o = JObject.Parse(r.ReadToEnd());
@@ -178,6 +180,8 @@ namespace ChatGptImageTranscriber
                         AzureSpeech.Initialize(speechKey, speechRegion);
                     }
                 }
+                Application.Current.MainWindow.Width = Convert.ToDouble(parseStringFromJson(o, "WindowWidth", "WindowWidth is Blank, Add It To The \"config.json\" File", "Missing WindowWidth"));
+                Application.Current.MainWindow.Height = Convert.ToDouble(parseStringFromJson(o, "WindowHeight", "WindowHeight is Blank, Add It To The \"config.json\" File", "Missing WindowHeight"));
 
                 ChatGPTClient.Initialize(chatGPTKey, aiModel, assistantInstructions);
             }

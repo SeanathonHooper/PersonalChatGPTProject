@@ -5,21 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatGptImageTranscriber"
         mc:Ignorable="d"
-        Height="920" Width="600"
+        Height="900" Width="1600"
         WindowStyle="SingleBorderWindow"
         Background="#272537"
-        Title="ChatGPT"
-        ResizeMode="NoResize">
+        Title="ChatGPT">
 
 
     <Grid>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="736"/>
-            <RowDefinition/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Text="ChatGPT"
                    Foreground="AntiqueWhite"
                    FontSize="48"
@@ -39,16 +40,10 @@
                  Foreground="AntiqueWhite"
                  FontSize="10"
                  Style="{StaticResource ResponseUpdateButton}"/>
-            <RadioButton
-                x:Name="enableVoiceButton"
-                Click="enableVoiceButton_Click"
-                Margin="20,5,0,0"
-                Foreground="AntiqueWhite"
-                FontSize="13"
-                Style="{StaticResource ToggleVoiceButton}" IsChecked="True"/>
+
 
         </StackPanel>
-        <StackPanel Grid.Row="0" VerticalAlignment="Top" Height="635" Width="500" Background="#171527" Margin="50,79,50,0">
+        <StackPanel Grid.Row="1" VerticalAlignment="Stretch" Width="500" Background="#171527">
             <TextBlock x:Name="openAIText"
                    FontSize="20"
                    Foreground="AntiqueWhite"
@@ -59,7 +54,7 @@
 
         </StackPanel>
 
-        <StackPanel Grid.Row="1"
+        <StackPanel Grid.Row="2"
                 Orientation="Horizontal"
                 HorizontalAlignment="Center">
             <Border CornerRadius="10"
